@@ -1,0 +1,129 @@
+微博上有个“点赞”功能，你可以为你喜欢的博文点个赞表示支持。每篇博文都有一些刻画其特性的标签，而你点赞的博文的类型，也间接刻画了你的特性。本题就要求你写个程序，通过统计一个人点赞的纪录，分析这个人的特性。
+
+输入格式：
+输入在第一行给出一个正整数N（≤1000），是该用户点赞的博文数量。随后N行，每行给出一篇被其点赞的博文的特性描述，格式为“K F1。。”
+4
+3 889 233 2
+5 100 3 233 2 73
+4 3 73 889 2
+2 233 123
+
+输出格式：
+统计所有被点赞的博文中最常出现的那个特性标签，在一行中输出它的编号和出现次数，数字间隔1个空格。如果有并列，则输出编号最大的那个。
+233 3
+
+关键在于字符串读取一行数据，然后获得这一行字符串中的数字
+
+The code below is trash code ,I wrote during the contest.In order to show our skill,thus,I decide to ignore the first number of each  line.So I must to  split one sentence of string.
+
+#include<iostream>
+#include<cstring>
+#include<stdio.h>
+using namespace std;
+struct node{
+	int value;
+	int count;
+};
+
+int my_pow(int a,int b){
+    int sum = 1;
+    for(int i=0;i<b;i++){
+        sum *= a;
+    }
+    return sum;
+}
+
+int str_to_int(string str2){
+    //warning .There is error value if the integer is biger.
+    int k = 0,index = 0,temp;
+    for(int i = str2.length()-1 ; i >= 0; i--){
+        temp = str2[i] - '0';
+        k += temp*my_pow(10,index);
+        index++;
+    }
+    return k;
+}
+
+int main()
+{
+	int N;
+	cin>>N;
+	//node *no = new node[N];
+	node no[1000];
+	int no_len = 0;
+	getchar();
+	string str;
+	int before,end;
+	string Int;
+	int value;
+	
+	for(int i = 0;i < N; i++){
+		getline(cin,str);
+		before = 0;
+		int j;
+		for(j=0;j<str.length();j++){
+			if(str[j]==' '){
+				if(before == 0)
+				{
+					before = j;
+					end = j;
+					continue;
+				}
+				before = end;
+				end = j; 
+				Int = str.substr(before+1,end-before-1);
+				value = str_to_int(Int);
+				int k;
+				for(k = 0;k < no_len;k++){
+					if(no[k].value == value){
+						no[k].count++;
+						break;
+					}
+				}
+				if(k == no_len && no[k-1].value != value){
+					no[k].value = value;
+					no[k].count = 1;
+					no_len++;
+				}
+			}
+				
+		}
+		
+		//到达字符串最后
+			if(j == str.length()){
+				Int = str.substr(end+1,str.length()-end-1);
+				value = str_to_int(Int);
+				int k;
+				for(k = 0;k < no_len;k++){
+					if(no[k].value == value){
+						no[k].count++;
+						break;
+					}
+				}
+				if(k == no_len && no[k-1].value != value){
+					no[k].value = value;
+					no[k].count = 1;
+					no_len++;
+				}
+			} 
+	}
+	//找最大值 
+	int max = 0; 
+	int flag = 0;
+	for(int g=0;g<no_len;g++){
+		if(no[g].count >= max){
+			
+			if(no[g].count == max){
+				if(no[g].value > no[flag].value)
+					flag = g;		
+			}
+			if(no[g].count > max){
+				max = no[g].count;
+				flag = g;
+			}
+		}
+	}
+	cout<<no[flag].value<<" "<<no[flag].count;
+	return 0;
+}
+
