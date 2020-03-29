@@ -1,0 +1,6 @@
+#define loop(i,x,y) for(register int i = x;i <= y;i++)
+
+ios::sync_with_stdio(0);//多数据的读取
+
+cin.tie(0);
+cout.tie(0);
